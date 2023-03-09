@@ -2,4 +2,4 @@
 rms Scheduler preemptive 
 
 To run it
-'''mvn exec:java'''
+``` mvn exec:java ```
