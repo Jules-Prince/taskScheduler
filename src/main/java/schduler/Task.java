@@ -1,4 +1,4 @@
-package preemptive;
+package schduler;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -35,13 +35,21 @@ public class Task {
     public void updateNeedToProcess(int currentTick){
         if(currentTick%this.getP() == 0){
             this.setNeedToProcess(true);
-            if(this.restOfTickToProcess==0)
+            if(this.isTaskFinished())
                 this.setRestOfTickToProcess(this.getC());
         }
+    }
+
+    public boolean isTaskFinished(){
+        return this.restOfTickToProcess==0;
     }
 
     @Override
     public String toString() {
         return "| " + this.getName() + " |" + "\n";
+    }
+
+    public void reduceRemainingProcessingTime() {
+        this.setRestOfTickToProcess(this.getRestOfTickToProcess()-1);
     }
 }
