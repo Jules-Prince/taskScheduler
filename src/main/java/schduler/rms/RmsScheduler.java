@@ -3,23 +3,18 @@ package schduler.rms;
 import lombok.Getter;
 import lombok.Setter;
 import schduler.Scheduler;
-import schduler.Task;
-import schduler.rms.nonPreemptive.RmsSchedulerNonPreemtive;
-import schduler.rms.preemptive.RmsSchedulerPreemtive;
+import task.Task;
+import schduler.exception.CantProceedTaskException;
 
 import java.util.Comparator;
 import java.util.List;
 
 @Getter
 @Setter
-public abstract class RmsScheduler extends Scheduler {
+public class RmsScheduler extends Scheduler {
 
-    public RmsScheduler(List<Task> tasks, int numberOfTicks) {
-        super(tasks, numberOfTicks);
-    }
-
-    public static RmsScheduler newRmsScheduler(List<Task> tasks, int numberOfTicks, boolean isPreemtive){
-        return isPreemtive ? new RmsSchedulerPreemtive(tasks, numberOfTicks) : new RmsSchedulerNonPreemtive(tasks, numberOfTicks);
+    public RmsScheduler(List<Task> tasks, int numberOfTicks, boolean isPreemtive) {
+        super(tasks, numberOfTicks, isPreemtive);
     }
 
     public Task getHighestPriorityTask() {
@@ -32,4 +27,25 @@ public abstract class RmsScheduler extends Scheduler {
         this.getTasks().forEach((t) -> t.updateNeedToProcess(currentTick));
     }
 
+    @Override
+    public Task checkWhoProcess(Task lastProcessedTask, int currentTick) throws CantProceedTaskException {
+        this.updateTaskList(currentTick);
+        Task taskToProcess = this.getHighestPriorityTask();
+        if (taskToProcess != null)
+            taskToProcess.reduceRemainingProcessingTime();
+
+        if(!isPreemtive()){
+            checkIfTaskCanStart(lastProcessedTask, currentTick);
+        }
+
+        return taskToProcess;
+    }
+
+    private void checkIfTaskCanStart(Task lastProcessedTask, int currentTick) throws CantProceedTaskException {
+        if (lastProcessedTask != null && !lastProcessedTask.isTaskFinished()) {
+            if (!this.getHighestPriorityTask().equals(lastProcessedTask)) {
+                throw new CantProceedTaskException(this.getHighestPriorityTask(), lastProcessedTask, currentTick);
+            }
+        }
+    }
 }

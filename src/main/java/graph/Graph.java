@@ -1,6 +1,7 @@
-package schduler;
+package graph;
 
 import lombok.Getter;
+import task.Task;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

@@ -1,7 +1,10 @@
 package schduler;
 
+import graph.Graph;
+import graph.ProcessBar;
 import lombok.Getter;
 import schduler.exception.CantProceedTaskException;
+import task.Task;
 
 import java.util.List;
 
@@ -12,10 +15,13 @@ public abstract class Scheduler {
     private Graph graph;
     private int numberOfTicks;
 
-    public Scheduler(List<Task> tasks, int numberOfTicks) {
+    private boolean isPreemtive;
+
+    public Scheduler(List<Task> tasks, int numberOfTicks, boolean isPreemtive) {
         this.tasks = tasks;
         this.numberOfTicks = numberOfTicks;
         this.graph = new Graph();
+        this.isPreemtive = isPreemtive;
         this.initGraph();
     }
 

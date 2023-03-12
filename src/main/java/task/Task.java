@@ -1,4 +1,4 @@
-package schduler;
+package task;
 
 import lombok.Getter;
 import lombok.Setter;

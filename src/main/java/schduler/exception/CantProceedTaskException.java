@@ -1,6 +1,6 @@
 package schduler.exception;
 
-import schduler.Task;
+import task.Task;
 
 public class CantProceedTaskException extends Exception {
     public CantProceedTaskException(Task taskToProcess, Task taskThatCantBeStopped, int currentTick) {

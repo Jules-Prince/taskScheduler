@@ -1,4 +1,4 @@
-package schduler;
+package graph;
 
 import lombok.Getter;
 
